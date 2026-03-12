@@ -1,9 +1,29 @@
+import bcrypt from "bcrypt"
+
 export async function seed(knex) {
+
   await knex("users").del()
 
+  const password = await bcrypt.hash("1234", 10)
+
   await knex("users").insert([
-    { id: 1, name: "Dispatcher", role: "dispatcher" },
-    { id: 2, name: "Master Ivan", role: "master" },
-    { id: 3, name: "Master Alex", role: "master" }
+    {
+      id: 1,
+      name: "dispatcher",
+      role: "dispatcher",
+      password
+    },
+    {
+      id: 2,
+      name: "master1",
+      role: "master",
+      password
+    },
+    {
+      id: 3,
+      name: "master2",
+      role: "master",
+      password
+    }
   ])
 }
