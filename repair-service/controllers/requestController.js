@@ -24,3 +24,44 @@ export const createRequest = async (req, res) => {
         res.status(500).json({ message: "Server error" })
     }
 }
+
+export const getMyRequests = async (req, res) => {
+
+    const masterId = req.user.id
+
+    const requests = await requestModel.getRequestsByMaster(masterId)
+
+    res.json(requests)
+}
+
+
+export const startRequest = async (req, res) => {
+
+    const id = req.params.id
+
+    const updated = await requestModel.startRequest(id)
+
+    if (!updated) {
+        return res.status(409).json({
+            message: "Request already taken"
+        })
+    }
+
+    res.json({ message: "Request started" })
+}
+
+
+export const finishRequest = async (req, res) => {
+
+    const id = req.params.id
+
+    const updated = await requestModel.finishRequest(id)
+
+    if (!updated) {
+        return res.status(400).json({
+            message: "Request cannot be finished"
+        })
+    }
+
+    res.json({ message: "Request finished" })
+}

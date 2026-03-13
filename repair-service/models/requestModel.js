@@ -14,3 +14,38 @@ export const createRequest = async (data) => {
 
     return request
 }
+
+export const getRequestsByMaster = (masterId) => {
+    return db("requests")
+        .where({ assignedTo: masterId })
+}
+
+
+export const startRequest = async (id) => {
+
+    const updated = await db("requests")
+        .where({
+            id,
+            status: "assigned"
+        })
+        .update({
+            status: "in_progress"
+        })
+
+    return updated
+}
+
+
+export const finishRequest = async (id) => {
+
+    const updated = await db("requests")
+        .where({
+            id,
+            status: "in_progress"
+        })
+        .update({
+            status: "done"
+        })
+
+    return updated
+}
