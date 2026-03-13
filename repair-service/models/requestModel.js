@@ -49,3 +49,47 @@ export const finishRequest = async (id) => {
 
     return updated
 }
+
+export const getRequests = (status) => {
+
+    const query = db("requests")
+
+    if (status) {
+        query.where({ status })
+    }
+
+    return query.orderBy("created_at", "desc")
+}
+
+
+export const assignRequest = async (id, masterId) => {
+
+    const updated = await db("requests")
+        .where({
+            id,
+            status: "new"
+        })
+        .update({
+            assignedTo: masterId,
+            status: "assigned",
+            updated_at: new Date()
+        })
+
+    return updated
+}
+
+
+export const cancelRequest = async (id) => {
+
+    const updated = await db("requests")
+        .whereNot({
+            status: "done"
+        })
+        .where({ id })
+        .update({
+            status: "canceled",
+            updated_at: new Date()
+        })
+
+    return updated
+}

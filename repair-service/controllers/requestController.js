@@ -65,3 +65,57 @@ export const finishRequest = async (req, res) => {
 
     res.json({ message: "Request finished" })
 }
+
+export const getRequests = async (req, res) => {
+
+    if (req.user.role !== "dispatcher") {
+        return res.status(403).json({ message: "Forbidden" })
+    }
+
+    const { status } = req.query
+
+    const requests = await requestModel.getRequests(status)
+
+    res.json(requests)
+}
+
+
+export const assignRequest = async (req, res) => {
+
+    if (req.user.role !== "dispatcher") {
+        return res.status(403).json({ message: "Forbidden" })
+    }
+
+    const id = req.params.id
+    const { masterId } = req.body
+
+    const updated = await requestModel.assignRequest(id, masterId)
+
+    if (!updated) {
+        return res.status(400).json({
+            message: "Cannot assign request"
+        })
+    }
+
+    res.json({ message: "Master assigned" })
+}
+
+
+export const cancelRequest = async (req, res) => {
+
+    if (req.user.role !== "dispatcher") {
+        return res.status(403).json({ message: "Forbidden" })
+    }
+
+    const id = req.params.id
+
+    const updated = await requestModel.cancelRequest(id)
+
+    if (!updated) {
+        return res.status(400).json({
+            message: "Cannot cancel request"
+        })
+    }
+
+    res.json({ message: "Request canceled" })
+}
