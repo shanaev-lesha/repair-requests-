@@ -1,0 +1,68 @@
+:root {
+  --olive-gray: #6c756b;
+  --violet: #b14aed;
+  --sky-blue: #96c5f7;
+  --light-blue: #a9d3ff;
+}
+
+body {
+  background: linear-gradient(135deg, var(--sky-blue), var(--light-blue));
+  min-height: 100vh;
+}
+
+.text-dark-title {
+  color: var(--olive-gray);
+}
+
+.app-nav .nav-link {
+  color: #fff;
+  background: var(--olive-gray);
+  margin-right: 8px;
+}
+
+.app-nav .nav-link.active {
+  background: var(--violet);
+}
+
+.panel {
+  border-radius: 1rem;
+}
+
+.panel-client {
+  background: rgba(169, 211, 255, 0.85);
+}
+
+.panel-dispatcher {
+  background: rgba(150, 197, 247, 0.88);
+}
+
+.panel-master {
+  background: rgba(108, 117, 107, 0.16);
+}
+
+.btn-accent {
+  background: var(--violet);
+  color: #fff;
+  border: none;
+}
+
+.btn-accent:hover {
+  background: #9f3ed9;
+  color: #fff;
+}
+
+.table {
+  background: #fff;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--light-blue);
+  color: #222;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
