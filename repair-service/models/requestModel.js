@@ -21,12 +21,13 @@ export const getRequestsByMaster = (masterId) => {
 }
 
 
-export const startRequest = async (id) => {
+export const startRequest = async (id, masterId) => {
 
     const updated = await db("requests")
         .where({
             id,
-            status: "assigned"
+            status: "assigned",
+            assignedTo: masterId
         })
         .update({
             status: "in_progress"
@@ -36,12 +37,13 @@ export const startRequest = async (id) => {
 }
 
 
-export const finishRequest = async (id) => {
+export const finishRequest = async (id, masterId) => {
 
     const updated = await db("requests")
         .where({
             id,
-            status: "in_progress"
+            status: "in_progress",
+            assignedTo: masterId
         })
         .update({
             status: "done"

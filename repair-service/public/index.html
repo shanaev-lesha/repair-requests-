@@ -1,167 +1,170 @@
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Repair Requests UI</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="/styles.css" />
-  </head>
-  <body>
-    <main class="container py-4">
-      <header class="mb-4">
-        <h1 class="fw-bold text-dark-title">Заявки в ремонтную службу</h1>
-        <p class="text-muted mb-0">Три экрана: клиент, диспетчер и мастер.</p>
-      </header>
 
-      <ul class="nav nav-pills app-nav mb-4" id="screenTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#client-screen" type="button" role="tab">Создание заявки</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#dispatcher-screen" type="button" role="tab">Панель диспетчера</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#master-screen" type="button" role="tab">Панель мастера</button>
-        </li>
-      </ul>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Repair Requests UI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
 
-      <div id="alertBox" class="alert d-none" role="alert"></div>
+<body>
+  <main class="container py-4">
+    <header class="mb-4">
+      <h1 class="fw-bold text-dark-title">Заявки в ремонтную службу</h1>
+    </header>
 
-      <section class="tab-content">
-        <article class="tab-pane fade show active" id="client-screen" role="tabpanel">
-          <div class="card shadow-sm border-0 panel panel-client">
-            <div class="card-body p-4">
-              <h2 class="h4 mb-3">Форма создания заявки</h2>
-              <form id="createRequestForm" class="row g-3">
-                <div class="col-md-6">
-                  <label class="form-label">Клиент</label>
-                  <input class="form-control" name="clientName" required />
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Телефон</label>
-                  <input class="form-control" name="phone" required />
-                </div>
-                <div class="col-12">
-                  <label class="form-label">Адрес</label>
-                  <input class="form-control" name="address" required />
-                </div>
-                <div class="col-12">
-                  <label class="form-label">Описание проблемы</label>
-                  <textarea class="form-control" name="problemText" rows="4" required></textarea>
-                </div>
-                <div class="col-12">
-                  <button class="btn btn-accent" type="submit">Создать заявку</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </article>
+    <ul class="nav nav-pills app-nav mb-4" id="screenTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#client-screen" type="button"
+          role="tab">Создание заявки</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#dispatcher-screen" type="button"
+          role="tab">Панель диспетчера</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#master-screen" type="button" role="tab">Панель
+          мастера</button>
+      </li>
+    </ul>
 
-        <article class="tab-pane fade" id="dispatcher-screen" role="tabpanel">
-          <div class="card shadow-sm border-0 panel panel-dispatcher">
-            <div class="card-body p-4">
-              <h2 class="h4 mb-3">Панель диспетчера</h2>
+    <div id="alertBox" class="alert d-none" role="alert"></div>
 
-              <form id="dispatcherLoginForm" class="row g-2 align-items-end mb-3">
-                <div class="col-md-4">
-                  <label class="form-label">Логин диспетчера</label>
-                  <input class="form-control" name="name" required />
-                </div>
-                <div class="col-md-4">
-                  <label class="form-label">Пароль</label>
-                  <input class="form-control" type="password" name="password" required />
-                </div>
-                <div class="col-md-4">
-                  <button class="btn btn-outline-dark w-100" type="submit">Войти</button>
-                </div>
-              </form>
-
-              <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                  <label class="form-label">Фильтр по статусу</label>
-                  <select id="dispatcherStatus" class="form-select">
-                    <option value="">Все</option>
-                    <option value="new">new</option>
-                    <option value="assigned">assigned</option>
-                    <option value="in_progress">in_progress</option>
-                    <option value="done">done</option>
-                    <option value="canceled">canceled</option>
-                  </select>
-                </div>
-                <div class="col-md-6 d-flex align-items-end">
-                  <button id="loadDispatcherRequests" class="btn btn-accent w-100" type="button">Обновить таблицу</button>
-                </div>
+    <section class="tab-content">
+      <article class="tab-pane fade show active" id="client-screen" role="tabpanel">
+        <div class="card shadow-sm border-0 panel panel-client">
+          <div class="card-body p-4">
+            <h2 class="h4 mb-3">Форма создания заявки</h2>
+            <form id="createRequestForm" class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">Клиент</label>
+                <input class="form-control" name="clientName" required />
               </div>
+              <div class="col-md-6">
+                <label class="form-label">Телефон</label>
+                <input class="form-control" name="phone" required />
+              </div>
+              <div class="col-12">
+                <label class="form-label">Адрес</label>
+                <input class="form-control" name="address" required />
+              </div>
+              <div class="col-12">
+                <label class="form-label">Описание проблемы</label>
+                <textarea class="form-control" name="problemText" rows="4" required></textarea>
+              </div>
+              <div class="col-12">
+                <button class="btn btn-accent" type="submit">Создать заявку</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </article>
 
-              <div class="table-responsive">
-                <table class="table table-hover align-middle" id="dispatcherTable">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Клиент</th>
-                      <th>Телефон</th>
-                      <th>Адрес</th>
-                      <th>Статус</th>
-                      <th>Назначено</th>
-                      <th>Действия</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
+      <article class="tab-pane fade" id="dispatcher-screen" role="tabpanel">
+        <div class="card shadow-sm border-0 panel panel-dispatcher">
+          <div class="card-body p-4">
+            <h2 class="h4 mb-3">Панель диспетчера</h2>
+
+            <form id="dispatcherLoginForm" class="row g-2 align-items-end mb-3">
+              <div class="col-md-4">
+                <label class="form-label">Логин диспетчера</label>
+                <input class="form-control" name="name" required />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Пароль</label>
+                <input class="form-control" type="password" name="password" required />
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-outline-dark w-100" type="submit">Войти</button>
+              </div>
+            </form>
+
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Фильтр по статусу</label>
+                <select id="dispatcherStatus" class="form-select">
+                  <option value="">Все</option>
+                  <option value="new">new</option>
+                  <option value="assigned">assigned</option>
+                  <option value="in_progress">in_progress</option>
+                  <option value="done">done</option>
+                  <option value="canceled">canceled</option>
+                </select>
+              </div>
+              <div class="col-md-6 d-flex align-items-end">
+                <button id="loadDispatcherRequests" class="btn btn-accent w-100" type="button">Обновить таблицу</button>
               </div>
             </div>
-          </div>
-        </article>
 
-        <article class="tab-pane fade" id="master-screen" role="tabpanel">
-          <div class="card shadow-sm border-0 panel panel-master">
-            <div class="card-body p-4">
-              <h2 class="h4 mb-3">Панель мастера</h2>
-
-              <form id="masterLoginForm" class="row g-2 align-items-end mb-3">
-                <div class="col-md-4">
-                  <label class="form-label">Логин мастера</label>
-                  <input class="form-control" name="name" required />
-                </div>
-                <div class="col-md-4">
-                  <label class="form-label">Пароль</label>
-                  <input class="form-control" type="password" name="password" required />
-                </div>
-                <div class="col-md-4">
-                  <button class="btn btn-outline-dark w-100" type="submit">Войти</button>
-                </div>
-              </form>
-
-              <button id="loadMasterRequests" class="btn btn-accent mb-3" type="button">Загрузить мои заявки</button>
-
-              <div class="table-responsive">
-                <table class="table table-hover align-middle" id="masterTable">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Клиент</th>
-                      <th>Адрес</th>
-                      <th>Описание</th>
-                      <th>Статус</th>
-                      <th>Действия</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle" id="dispatcherTable">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Клиент</th>
+                    <th>Телефон</th>
+                    <th>Адрес</th>
+                    <th>Статус</th>
+                    <th>Назначено</th>
+                    <th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
             </div>
           </div>
-        </article>
-      </section>
-    </main>
+        </div>
+      </article>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-    <script src="/app.js"></script>
-  </body>
+      <article class="tab-pane fade" id="master-screen" role="tabpanel">
+        <div class="card shadow-sm border-0 panel panel-master">
+          <div class="card-body p-4">
+            <h2 class="h4 mb-3">Панель мастера</h2>
+
+            <form id="masterLoginForm" class="row g-2 align-items-end mb-3">
+              <div class="col-md-4">
+                <label class="form-label">Логин мастера</label>
+                <input class="form-control" name="name" required />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Пароль</label>
+                <input class="form-control" type="password" name="password" required />
+              </div>
+              <div class="col-md-4">
+                <button class="btn btn-outline-dark w-100" type="submit">Войти</button>
+              </div>
+            </form>
+
+            <button id="loadMasterRequests" class="btn btn-accent mb-3" type="button">Загрузить мои заявки</button>
+
+            <div class="table-responsive">
+              <table class="table table-hover align-middle" id="masterTable">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Клиент</th>
+                    <th>Адрес</th>
+                    <th>Описание</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+    crossorigin="anonymous"></script>
+  <script src="/app.js"></script>
+</body>
+
 </html>

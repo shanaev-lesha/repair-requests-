@@ -38,8 +38,9 @@ export const getMyRequests = async (req, res) => {
 export const startRequest = async (req, res) => {
 
     const id = req.params.id
+    const masterId = req.user.id
 
-    const updated = await requestModel.startRequest(id)
+    const updated = await requestModel.startRequest(id, masterId)
 
     if (!updated) {
         return res.status(409).json({
@@ -54,8 +55,9 @@ export const startRequest = async (req, res) => {
 export const finishRequest = async (req, res) => {
 
     const id = req.params.id
+    const masterId = req.user.id
 
-    const updated = await requestModel.finishRequest(id)
+    const updated = await requestModel.finishRequest(id, masterId)
 
     if (!updated) {
         return res.status(400).json({
@@ -87,7 +89,14 @@ export const assignRequest = async (req, res) => {
     }
 
     const id = req.params.id
-    const { masterId } = req.body
+    const masterId = req.body?.masterId
+
+
+    if (!masterId) {
+        return res.status(400).json({
+            message: "masterId is required"
+        })
+    }
 
     const updated = await requestModel.assignRequest(id, masterId)
 

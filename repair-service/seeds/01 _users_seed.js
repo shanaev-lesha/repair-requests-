@@ -15,13 +15,13 @@ export async function seed(knex) {
     },
     {
       id: 2,
-      name: "master1",
+      name: "master2",
       role: "master",
       password
     },
     {
       id: 3,
-      name: "master2",
+      name: "master3",
       role: "master",
       password
     }
