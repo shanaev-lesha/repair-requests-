@@ -1969,6 +1969,369 @@ status = 'assigned'
 
 Фронтенд реализован как **одна HTML страница с JavaScript**, которая делает запросы к API через `fetch`. Это позволило быстро реализовать три экрана: создание заявки, панель диспетчера и панель мастера.
 
+##
+
+напиши README.md для моего проекта
+
+##
+
+```markdown
+# Repair Service API
+
+Небольшой сервис для управления заявками ремонтной службы.
+
+Проект реализует REST API и простой веб-интерфейс для работы с заявками.  
+В системе есть две роли: **dispatcher** (диспетчер) и **master** (мастер).
+
+---
+
+# Стек технологий
+
+- Node.js
+- Express
+- PostgreSQL
+- Knex (query builder + migrations)
+- JWT авторизация
+- Docker + Docker Compose
+- Jest + Supertest (автотесты)
+
+---
+
+# Функциональность
+
+## Создание заявки
+
+Клиент может создать заявку со следующими полями:
+
+- clientName
+- phone
+- address
+- problemText
+
+После создания заявка получает статус:
+
+```
+
+new
+
+```
+
+---
+
+## Панель диспетчера
+
+Диспетчер может:
+
+- смотреть список заявок
+- фильтровать заявки по статусу
+- назначать мастера
+- отменять заявки
+
+API:
+
+```
+
+GET /requests
+GET /requests?status=new
+PUT /requests/:id/assign
+PUT /requests/:id/cancel
+
+```
+
+---
+
+## Панель мастера
+
+Мастер может:
+
+- видеть заявки, назначенные ему
+- взять заявку в работу
+- завершить заявку
+
+API:
+
+```
+
+GET /requests/my
+PUT /requests/:id/start
+PUT /requests/:id/finish
+
+```
+
+---
+
+# Статусы заявок
+
+```
+
+new
+assigned
+in_progress
+done
+canceled
+
+```
+
+---
+
+# Защита от race condition
+
+Действие **"взять заявку в работу"** защищено от гонки.
+
+Используется SQL-условие:
+
+```
+
+UPDATE requests
+SET status = 'in_progress'
+WHERE id = ?
+AND status = 'assigned'
+
+```
+
+Если два мастера попытаются взять одну заявку:
+
+- первый запрос выполнится успешно
+- второй получит ответ
+
+```
+
+409 Conflict
+
+```
+
+---
+
+# Установка и запуск
+
+## Требования
+
+- Docker
+- Docker Compose
+
+---
+
+## Клонировать репозиторий
+
+```
+
+git clone <repository-url>
+cd repair-service
+
+```
+
+---
+
+## Создать .env
+
+Скопировать файл:
+
+```
+
+cp .env.example .env
+
+```
+
+Пример `.env`:
+
+```
+
+PORT=3000
+
+DB_HOST=db
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=repair_service
+
+JWT_SECRET=mysecretkey
+
+```
+
+---
+
+## Запуск проекта
+
+```
+
+docker compose up --build
+
+```
+
+После запуска контейнеров нужно выполнить миграции.
+
+---
+
+## Запуск миграций
+
+```
+
+docker compose exec app npx knex migrate:latest
+
+```
+
+---
+
+## Запуск сидов
+
+```
+
+docker compose exec app npx knex seed:run
+
+```
+
+---
+
+## Открыть приложение
+
+```
+
+[http://localhost:3000](http://localhost:3000)
+
+```
+
+---
+
+# Тестовые пользователи
+
+После запуска сидов доступны пользователи:
+
+```
+
+dispatcher / 1234
+master2 / 1234
+master3 / 1234
+
+```
+
+---
+
+# Проверка race condition
+
+Можно проверить защиту от гонки двумя запросами.
+
+Открыть два терминала и выполнить одновременно:
+
+```
+
+curl -X PUT [http://localhost:3000/requests/2/start](http://localhost:3000/requests/2/start) 
+-H "Authorization: Bearer TOKEN"
+
+```
+
+Один запрос будет успешным, второй получит:
+
+```
+
+409 Conflict
+
+```
+
+---
+
+# Запуск тестов
+
+```
+
+npm test
+
+```
+
+Тесты используют:
+
+- Jest
+- Supertest
+
+Покрытые сценарии:
+
+- авторизация
+- создание заявки
+
+---
+
+# Структура проекта
+
+```
+
+repair-service
+│
+├── controllers
+├── models
+├── routes
+├── middlewares
+├── db
+│
+├── migrations
+├── seeds
+│
+├── public
+│
+├── tests
+│
+├── Dockerfile
+├── docker-compose.yml
+├── knexfile.js
+│
+├── app.js
+├── server.js
+│
+├── README.md
+├── DECISIONS.md
+├── PROMPTS.md
+
+```
+
+---
+
+# Автотесты
+
+В проекте реализовано минимум **2 автотеста**:
+
+- проверка авторизации (`/auth/login`)
+- создание заявки (`/requests`)
+
+Запуск:
+
+```
+
+npm test
+
+```
+
+---
+
+# Переменные окружения
+
+Файл `.env`:
+
+```
+
+PORT
+DB_HOST
+DB_PORT
+DB_USER
+DB_PASSWORD
+DB_NAME
+JWT_SECRET
+
+```
+
+---
+
+# Дополнительно
+
+В репозитории присутствуют файлы:
+
+```
+
+DECISIONS.md
+PROMPTS.md
+
+```
+
+Они описывают ключевые архитектурные решения и использование AI во время разработки.
+```
+
 
 
 Работа с *GPT Codex*

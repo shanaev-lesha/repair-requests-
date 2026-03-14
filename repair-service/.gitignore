@@ -1,5 +1,5 @@
 node_modules/
 *.log
-*.sqlite3
 .env
 .vscode/
+npm-debug.log
